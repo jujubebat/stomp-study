@@ -14,4 +14,10 @@ public class GreetingController {
         return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
     }
 
+    @MessageMapping("/chat")
+    @SendTo("/topic/chat")
+    public Chat chat(Chat chat) {
+        return new Chat(chat.getName(), chat.getMessage());
+    }
+
 }

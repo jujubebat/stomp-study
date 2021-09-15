@@ -19,10 +19,23 @@ function connect() {
   stompClient.connect({}, function (frame) {
     setConnected(true);
     console.log('Connected: ' + frame);
+
     stompClient.subscribe('/topic/greetings', function (greeting) {
       showGreeting(JSON.parse(greeting.body).content);
     });
+
+    stompClient.subscribe('/topic/chat', function (chat) {
+      showChat(JSON.parse(chat.body));
+    });
   });
+}
+
+/* Chat과 관련된 메서드 추가 */
+function sendChat() {
+  stompClient.send("/app/chat", {}, JSON.stringify({'name': $("#name").val(), 'message': $("#chatMessage").val()}));
+}
+function showChat(chat) {
+  $("#greetings").append("<tr><td>" + chat.name + " : " + chat.message + "</td></tr>");
 }
 
 function disconnect() {
@@ -49,4 +62,6 @@ $(function () {
   $( "#connect" ).click(function() { connect(); });
   $( "#disconnect" ).click(function() { disconnect(); });
   $( "#send" ).click(function() { sendName(); });
+  $( "#chatSend" ).click(function(){ sendChat(); }); // 추가
 });
+
